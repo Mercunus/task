@@ -14,9 +14,9 @@
 struct Node { 
             char data; 
             struct Node * next; 
-         };
+         }; 				//List creation
 
-void append(struct Node** head_ref, char new_data) {
+void append(struct Node** head_ref, char new_data) {   //Function to add client to list 
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
     struct Node* last = *head_ref;
 
@@ -34,7 +34,7 @@ void append(struct Node** head_ref, char new_data) {
     last->next = new_node;
 }
 
-void printList(struct Node* node) {
+void printList(struct Node* node) { 	//Function to print list
     printf("List of clients: ");
     while (node != NULL) {
         printf("%d -> ", node->data);
@@ -43,7 +43,7 @@ void printList(struct Node* node) {
     printf("NULL\n");
 }
 
-void deleteNode(struct Node** head_ref, int key) {
+void deleteNode(struct Node** head_ref, int key) {	//Function to delete client from list
     struct Node* temp = *head_ref;
     struct Node* prev = NULL;
 
@@ -71,7 +71,7 @@ int main() {
     socklen_t addr_len = sizeof(client_addr);
     struct epoll_event ev, events[MAX_EVENTS];
     
-    server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP); //Socket creation; TCP connection
     if (server_socket < 0) {
         perror("Socket creation error");
         exit(EXIT_FAILURE);
@@ -81,7 +81,7 @@ int main() {
     server_addr.sin_addr.s_addr =inet_addr("127.0.0.1");
     server_addr.sin_port = htons(PORT);
 
-    if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+    if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) { //Socket bind to IP adress
         perror("Socket bind error");
         close(server_socket);
         exit(EXIT_FAILURE);
