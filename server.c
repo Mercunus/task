@@ -151,7 +151,7 @@ int main() {
                     printf("Message received: %s from fd: %d\n", buffer, events[i].data.fd);
                     int receiver = atoi(strtok(buffer, " "));
                  
-		 if (receiver > 0 && receiver == 404){
+		 	if (receiver > 0 && receiver == 404){
 			char* message = strtok(NULL, "\0");
 			while (clients != NULL) {
 				receiver = clients->data;
