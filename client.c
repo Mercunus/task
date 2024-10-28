@@ -29,7 +29,7 @@ int main() {
     char buffer[BUFFER_SIZE];
     pthread_t id;
 
-    client_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    client_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP); //Socket creation; TCP connection
     if (client_socket < 0) {
         perror("Socket creation error");
         exit(EXIT_FAILURE);
@@ -39,7 +39,7 @@ int main() {
     server_addr.sin_port = htons(PORT);
     inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr);
 
-    if (connect(client_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+    if (connect(client_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) { //Socket connect to server to port 5555
         perror("Socket connection error");
         close(client_socket);
         exit(EXIT_FAILURE);
@@ -62,7 +62,7 @@ int main() {
 
     while (1) {
     
-        fgets(buffer, BUFFER_SIZE, stdin);
+        fgets(buffer, BUFFER_SIZE, stdin); //Get message from console
         if (strncmp(buffer, "exit", 4) == 0) {
             break;
         }
