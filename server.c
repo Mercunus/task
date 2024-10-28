@@ -74,7 +74,9 @@ int main() {
                     close(client_socket);
                     continue;
                 }
-
+                char buffer[BUFFER_SIZE];
+                sprintf(buffer, "%d", client_socket);
+                send(client_socket, buffer, strlen(buffer), 0);
                 printf("Client connected with.\n");
             } else {
                 
@@ -87,12 +89,11 @@ int main() {
                     close(events[i].data.fd);
                 } else {
                     buffer[bytes_received] = '\0';
-                    printf("Message received: %s\n", buffer);
-
-                    for (int j = 0; j < MAX_EVENTS; j++) {
-                        if (events[j].data.fd != server_socket && events[j].data.fd != events[i].data.fd) {
-                            send(events[j].data.fd, buffer, bytes_received, 0);
-                        }
+                    printf("Message received: %s from fd: %d\n", buffer, events[i].data.fd);
+                    int receiver = atoi(strtok(buffer, " "));
+                    if (receiver > 0) {
+                        char* message = strtok(NULL, "\0");
+                        send(receiver, message, strlen(message), 0);
                     }
                 }
             }
