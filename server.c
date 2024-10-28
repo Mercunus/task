@@ -10,7 +10,62 @@
 #define MAX_EVENTS 2
 #define BUFFER_SIZE 1024
 
+
+struct Node { 
+            char data; 
+            struct Node * next; 
+         };
+
+void append(struct Node** head_ref, char new_data) {
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+    struct Node* last = *head_ref;
+
+    new_node->data = new_data;
+    new_node->next = NULL;
+
+    if (*head_ref == NULL) {
+        *head_ref = new_node;
+        return;
+    }
+
+    while (last->next != NULL)
+        last = last->next;
+
+    last->next = new_node;
+}
+
+void printList(struct Node* node) {
+    printf("List of clients: ");
+    while (node != NULL) {
+        printf("%d -> ", node->data);
+        node = node->next;
+    }
+    printf("NULL\n");
+}
+
+void deleteNode(struct Node** head_ref, int key) {
+    struct Node* temp = *head_ref;
+    struct Node* prev = NULL;
+
+    if (temp != NULL && temp->data == key) {
+        *head_ref = temp->next;
+        free(temp);
+        return;
+    }
+
+    while (temp != NULL && temp->data != key) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if (temp == NULL) return;
+
+    prev->next = temp->next;
+    free(temp);
+}
+
 int main() {
+    struct Node* clients = NULL;
     int server_socket, client_socket, epoll_fd;
     struct sockaddr_in server_addr, client_addr;
     socklen_t addr_len = sizeof(client_addr);
@@ -77,7 +132,9 @@ int main() {
                 char buffer[BUFFER_SIZE];
                 sprintf(buffer, "%d", client_socket);
                 send(client_socket, buffer, strlen(buffer), 0);
+                append(&clients, client_socket);
                 printf("Client connected with fd: %s.\n", buffer);
+                printList(clients);
             } else {
                 
                 char buffer[BUFFER_SIZE];
@@ -86,7 +143,9 @@ int main() {
                 if (bytes_received <= 0) {
                   
                     printf("Client %d disconnected.\n", events[i].data.fd);
+                    deleteNode(&clients, events[i].data.fd);
                     close(events[i].data.fd);
+                    printList(clients);
                 } else {
                     buffer[bytes_received] = '\0';
                     printf("Message received: %s from fd: %d\n", buffer, events[i].data.fd);
