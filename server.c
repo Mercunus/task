@@ -10,6 +10,7 @@
 #define MAX_EVENTS 2
 #define BUFFER_SIZE 1024
 
+char sending_msg[BUFFER_SIZE];
 
 struct Node { 
             char data; 
@@ -153,14 +154,17 @@ int main() {
                  
 		 	if (receiver > 0 && receiver == 404){
 			char* message = strtok(NULL, "\0");
-			while (clients != NULL) {
-				receiver = clients->data;
-				send(receiver,message, strlen(message),0);
-				clients = clients->next;
+			sprintf(sending_msg, "from %d: %s", events[i].data.fd, message);
+			struct Node* rec = clients;
+			while (rec != NULL) {
+				receiver = rec->data;
+				send(receiver,sending_msg, strlen(sending_msg),0);
+				rec = rec->next;
 			}
 			} else if (receiver > 0) {
                         char* message = strtok(NULL, "\0");
-                        send(receiver, message, strlen(message), 0);
+			sprintf(sending_msg, "from %d: %s", events[i].data.fd, message);
+                        send(receiver, sending_msg, strlen(sending_msg), 0);
                     } 
                 }
             }
