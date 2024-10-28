@@ -66,6 +66,16 @@ int main() {
         if (strncmp(buffer, "exit", 4) == 0) {
             break;
         }
+	if (strncmp(buffer, "all", 3) == 0){  //HELP ME HERE SAVE ME KILL ME
+		char packet[BUFFER_SIZE];
+		char *start = strchr(buffer, ' ');
+		for (int i = atoi(start)+1; i < strlen(buffer); i++){
+			strcat(buffer[i], packet);
+		};
+		//strncpy(packet, buffer, strchr(buffer, "\0"));
+		strcat("404 ", packet);
+		strcpy(buffer, packet);
+	}
         send(client_socket, buffer, strlen(buffer), 0);
     }
 

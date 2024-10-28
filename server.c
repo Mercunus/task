@@ -150,10 +150,18 @@ int main() {
                     buffer[bytes_received] = '\0';
                     printf("Message received: %s from fd: %d\n", buffer, events[i].data.fd);
                     int receiver = atoi(strtok(buffer, " "));
-                    if (receiver > 0) {
+                 
+		 if (receiver > 0 && receiver == 404){
+			char* message = strtok(NULL, "\0");
+			while (clients != NULL) {
+				receiver = clients->data;
+				send(receiver,message, strlen(message),0);
+				clients = clients->next;
+			}
+			} else if (receiver > 0) {
                         char* message = strtok(NULL, "\0");
                         send(receiver, message, strlen(message), 0);
-                    }
+                    } 
                 }
             }
         }
