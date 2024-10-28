@@ -15,7 +15,7 @@ void* get_msgs(void* client_socket) {
         int bytes_received = recv(*(int*)client_socket, buffer, sizeof(buffer) - 1, 0);
         if (bytes_received > 0) {
             buffer[bytes_received] = '\0';
-            printf("Сообщение от сервера: %s\n", buffer);
+            printf("Message from server: %s\n", buffer);
         }
         else {
             pthread_exit(0);
@@ -31,7 +31,7 @@ int main() {
 
     client_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (client_socket < 0) {
-        perror("Ошибка при создании сокета");
+        perror("Socket creation error");
         exit(EXIT_FAILURE);
     }
 
@@ -40,7 +40,7 @@ int main() {
     inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr);
 
     if (connect(client_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
-        perror("Ошибка подключения к серверу");
+        perror("Socket connection error");
         close(client_socket);
         exit(EXIT_FAILURE);
     }
@@ -51,14 +51,14 @@ int main() {
         int bytes_received = recv(client_socket, buffer, sizeof(buffer) - 1, 0);
         if (bytes_received > 0) {
             buffer[bytes_received] = '\0';
-            printf("Подключен к серверу с fd: %s\n", buffer);
+            printf("Connected to server with fd: %s\n", buffer);
             connection_id = atoi(buffer);
         }
     }
 
     pthread_create(&id, NULL, get_msgs, &client_socket);
 
-    printf("Вводите сообщения (введите 'exit' для выхода):\n");
+    printf("Enter client fd + ' ' + message (print 'exit' for exit):\n");
 
     while (1) {
     

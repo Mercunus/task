@@ -77,7 +77,7 @@ int main() {
                 char buffer[BUFFER_SIZE];
                 sprintf(buffer, "%d", client_socket);
                 send(client_socket, buffer, strlen(buffer), 0);
-                printf("Client connected with.\n");
+                printf("Client connected with fd: %s.\n", buffer);
             } else {
                 
                 char buffer[BUFFER_SIZE];
@@ -85,7 +85,7 @@ int main() {
                 
                 if (bytes_received <= 0) {
                   
-                    printf("Client disconnected .\n");
+                    printf("Client %d disconnected.\n", events[i].data.fd);
                     close(events[i].data.fd);
                 } else {
                     buffer[bytes_received] = '\0';
